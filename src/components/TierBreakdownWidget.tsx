@@ -1,9 +1,10 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { AlertCircle, CheckCircle, Info } from 'lucide-react';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Legend } from 'recharts';
 
 interface TierMetric {
   name: string;
@@ -21,7 +22,14 @@ interface TierData {
 }
 
 const TierBreakdownWidget = () => {
-  const [selectedTier, setSelectedTier] = useState<string>('tier1');
+  const [selectedTier, setSelectedTier] = useState<number>(1);
+  
+  const tierColors = {
+    tier1: '#ea384c',
+    tier2: '#f97316',
+    tier3: '#fbbf24',
+    tier4: '#22c55e',
+  };
   
   const tierData: Record<string, TierData> = {
     tier1: {
@@ -36,6 +44,10 @@ const TierBreakdownWidget = () => {
         { name: 'ED Visits (yearly avg)', value: 3.2, maxValue: 5, color: 'bg-red-500' },
         { name: 'Hospitalizations (yearly)', value: 2.1, maxValue: 4, color: 'bg-red-500' },
         { name: 'ADL Dependencies', value: 3.5, maxValue: 6, color: 'bg-red-500' },
+        { name: 'Medication Count', value: 12.3, maxValue: 15, color: 'bg-red-500' },
+        { name: 'Social Support Score', value: 25, maxValue: 100, color: 'bg-red-500' },
+        { name: 'Housing Stability', value: 30, maxValue: 100, color: 'bg-red-500' },
+        { name: 'Caregiver Burden', value: 85, maxValue: 100, color: 'bg-red-500' },
       ]
     },
     tier2: {
@@ -50,6 +62,10 @@ const TierBreakdownWidget = () => {
         { name: 'ED Visits (yearly avg)', value: 1.3, maxValue: 5, color: 'bg-orange-500' },
         { name: 'Hospitalizations (yearly)', value: 0.8, maxValue: 4, color: 'bg-orange-500' },
         { name: 'ADL Dependencies', value: 1.2, maxValue: 6, color: 'bg-orange-500' },
+        { name: 'Medication Count', value: 8.5, maxValue: 15, color: 'bg-orange-500' },
+        { name: 'Social Support Score', value: 45, maxValue: 100, color: 'bg-orange-500' },
+        { name: 'Missed Appointments', value: 2.4, maxValue: 5, color: 'bg-orange-500' },
+        { name: 'Behavioral Health Score', value: 65, maxValue: 100, color: 'bg-orange-500' },
       ]
     },
     tier3: {
@@ -64,6 +80,10 @@ const TierBreakdownWidget = () => {
         { name: 'ED Visits (yearly avg)', value: 0.5, maxValue: 5, color: 'bg-yellow-400' },
         { name: 'Hospitalizations (yearly)', value: 0.2, maxValue: 4, color: 'bg-yellow-400' },
         { name: 'ADL Dependencies', value: 0.7, maxValue: 6, color: 'bg-yellow-400' },
+        { name: 'Medication Count', value: 5.2, maxValue: 15, color: 'bg-yellow-400' },
+        { name: 'Preventive Care Gaps', value: 1.8, maxValue: 5, color: 'bg-yellow-400' },
+        { name: 'Social Support Score', value: 65, maxValue: 100, color: 'bg-yellow-400' },
+        { name: 'Fall Risk Score', value: 40, maxValue: 100, color: 'bg-yellow-400' },
       ]
     },
     tier4: {
@@ -78,50 +98,111 @@ const TierBreakdownWidget = () => {
         { name: 'ED Visits (yearly avg)', value: 0.1, maxValue: 5, color: 'bg-green-500' },
         { name: 'Hospitalizations (yearly)', value: 0, maxValue: 4, color: 'bg-green-500' },
         { name: 'ADL Dependencies', value: 0.1, maxValue: 6, color: 'bg-green-500' },
+        { name: 'Medication Count', value: 2.1, maxValue: 15, color: 'bg-green-500' },
+        { name: 'Preventive Care Compliance', value: 90, maxValue: 100, color: 'bg-green-500' },
+        { name: 'Physical Activity Score', value: 85, maxValue: 100, color: 'bg-green-500' },
+        { name: 'Social Engagement', value: 80, maxValue: 100, color: 'bg-green-500' },
       ]
     },
   };
+
+  // Prepare data for bar chart
+  const getChartData = () => {
+    const tier = `tier${selectedTier}`;
+    return tierData[tier].metrics.map(metric => ({
+      name: metric.name,
+      value: (metric.value / metric.maxValue) * 100,
+      actualValue: metric.value,
+      maxValue: metric.maxValue,
+    }));
+  };
+
+  // Function to handle tier selection
+  const handleTierSelect = (tier: number) => {
+    setSelectedTier(tier);
+  };
+
+  const tierKey = `tier${selectedTier}`;
+  const currentTierData = tierData[tierKey];
+  const chartData = getChartData();
 
   return (
     <Card className="bg-white">
       <CardHeader>
         <CardTitle className="text-xl text-gray-800">Risk Tier Detailed Analysis</CardTitle>
       </CardHeader>
-      <CardContent>
-        <Tabs value={selectedTier} onValueChange={setSelectedTier} className="space-y-4">
-          <TabsList className="grid grid-cols-4 w-full">
-            <TabsTrigger value="tier1" className="text-red-600">Tier 1</TabsTrigger>
-            <TabsTrigger value="tier2" className="text-orange-600">Tier 2</TabsTrigger>
-            <TabsTrigger value="tier3" className="text-yellow-600">Tier 3</TabsTrigger>
-            <TabsTrigger value="tier4" className="text-green-600">Tier 4</TabsTrigger>
-          </TabsList>
-          
-          {Object.entries(tierData).map(([key, data]) => (
-            <TabsContent key={key} value={key} className="space-y-4">
-              <div className={`p-4 rounded ${data.headerColor}`}>
-                <div className="flex items-center gap-2">
-                  {data.icon}
-                  <h3 className="font-semibold">{data.title}</h3>
-                </div>
-                <p className="mt-2 text-sm">{data.description}</p>
-              </div>
-              
-              <div className="space-y-4">
-                {data.metrics.map((metric, index) => (
-                  <div key={index} className="space-y-1">
-                    <div className="flex justify-between text-sm">
-                      <span>{metric.name}</span>
-                      <span className="font-medium">
-                        {metric.value} {metric.name.includes('Index') || metric.name.includes('Decline') ? '%' : ''}
-                      </span>
-                    </div>
-                    <Progress value={(metric.value / metric.maxValue) * 100} className={`h-2 ${metric.color}`} />
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
+      <CardContent className="space-y-6">
+        {/* Tier selection buttons */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {[1, 2, 3, 4].map((tier) => (
+            <button
+              key={tier}
+              onClick={() => handleTierSelect(tier)}
+              className={`px-4 py-2 rounded-lg transition-all ${
+                selectedTier === tier
+                  ? `bg-${tier === 1 ? 'red' : tier === 2 ? 'orange' : tier === 3 ? 'yellow' : 'green'}-500 text-white`
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+              }`}
+            >
+              Tier {tier}
+            </button>
           ))}
-        </Tabs>
+        </div>
+
+        {/* Current tier header */}
+        <div className={`p-4 rounded ${currentTierData.headerColor}`}>
+          <div className="flex items-center gap-2">
+            {currentTierData.icon}
+            <h3 className="font-semibold">{currentTierData.title}</h3>
+          </div>
+          <p className="mt-2 text-sm">{currentTierData.description}</p>
+        </div>
+        
+        {/* Metrics visualization */}
+        <div className="w-full h-80">
+          <ChartContainer 
+            config={{
+              tier1: { color: tierColors.tier1 },
+              tier2: { color: tierColors.tier2 },
+              tier3: { color: tierColors.tier3 },
+              tier4: { color: tierColors.tier4 },
+            }}
+          >
+            <BarChart
+              data={chartData}
+              layout="vertical"
+              margin={{ top: 5, right: 30, left: 150, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+              <XAxis type="number" domain={[0, 100]} tickFormatter={(tick) => `${tick}%`} />
+              <YAxis 
+                type="category" 
+                dataKey="name" 
+                tick={{ fontSize: 12 }}
+                width={140}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent 
+                    formatter={(value, name, entry) => {
+                      const item = entry.payload;
+                      return [`${item.actualValue} / ${item.maxValue} (${item.value.toFixed(0)}%)`];
+                    }}
+                  />
+                }
+              />
+              <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                {chartData.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`}
+                    fill={tierColors[tierKey as keyof typeof tierColors]} 
+                    opacity={0.8 + (0.2 * (entry.value / 100))}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        </div>
       </CardContent>
     </Card>
   );

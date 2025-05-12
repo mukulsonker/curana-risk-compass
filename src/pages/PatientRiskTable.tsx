@@ -22,10 +22,15 @@ const PatientRiskTable = () => {
 
   return (
     <div className="container p-4 mx-auto space-y-6">
-      <div className="flex items-center space-x-2 mb-6">
+      <div className="flex items-center justify-between mb-6">
         <Link to="/">
           <Button variant="outline" size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
+          </Button>
+        </Link>
+        <Link to="/risk-tiers">
+          <Button variant="secondary" size="sm">
+            View Risk Tier Definitions
           </Button>
         </Link>
       </div>
