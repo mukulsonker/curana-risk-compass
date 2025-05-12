@@ -1,12 +1,15 @@
-
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import KeyMetricsCard from '@/components/KeyMetricsCard';
 import RiskTierChart from '@/components/RiskTierChart';
 import PatientTable from '@/components/PatientTable';
 import SidebarPanel from '@/components/SidebarPanel';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DateRange, FilterState, Patient, KeyMetrics, RiskTierBreakdown, RiskTier } from '@/types/dashboard';
 import { fetchFilteredPatients, getKeyMetrics, getRiskTierBreakdown } from '@/services/mockData';
+import { FileText, PieChart } from 'lucide-react';
 
 const Dashboard = () => {
   const [filters, setFilters] = useState<FilterState>({
@@ -96,8 +99,45 @@ const Dashboard = () => {
               <KeyMetricsCard metrics={keyMetrics} />
             </div>
             
-            <div className="mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <RiskTierChart breakdown={riskTierBreakdown} />
+              
+              <Card className="bg-white h-[400px]">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-800">Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 p-6">
+                  <Link to="/risk-tiers" className="block">
+                    <Button variant="outline" className="w-full justify-start py-6 text-left">
+                      <PieChart className="mr-3 h-5 w-5" />
+                      <div>
+                        <p className="font-semibold">Risk Tier Definitions</p>
+                        <p className="text-sm text-gray-500">View risk stratification methodology</p>
+                      </div>
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/care-gaps" className="block">
+                    <Button variant="outline" className="w-full justify-start py-6 text-left">
+                      <FileText className="mr-3 h-5 w-5" />
+                      <div>
+                        <p className="font-semibold">Care Gap Reports</p>
+                        <p className="text-sm text-gray-500">Analyze quality measure gaps</p>
+                      </div>
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/palliative-eligibility" className="block">
+                    <Button variant="outline" className="w-full justify-start py-6 text-left">
+                      <FileText className="mr-3 h-5 w-5" />
+                      <div>
+                        <p className="font-semibold">Palliative Care Eligibility</p>
+                        <p className="text-sm text-gray-500">View patients eligible for palliative care</p>
+                      </div>
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
             </div>
             
             <div>

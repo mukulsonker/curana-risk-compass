@@ -49,9 +49,9 @@ const KeyMetricsCard = ({ metrics }: KeyMetricsCardProps) => {
         <CardHeader className="pb-2">
           <CardTitle className="text-sm text-gray-500">High-Risk Patients</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <p className="text-3xl font-bold text-healthcare-red-dark">{metrics.highRiskPatients.toLocaleString()}</p>
-          <p className="text-xs text-gray-500">(Tier 1 & 2)</p>
+          <p className="text-xs text-gray-500 mt-1">(Tier 1 & 2)</p>
         </CardContent>
       </Card>
     </div>
