@@ -48,14 +48,14 @@ const Header = ({
           </Select>
           
           <Select
-            value={facility || ""}
-            onValueChange={(value) => onFacilityChange(value === "" ? null : value)}
+            value={facility || "all"}
+            onValueChange={(value) => onFacilityChange(value === "all" ? null : value)}
           >
             <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="All Facilities" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Facilities</SelectItem>
+              <SelectItem value="all">All Facilities</SelectItem>
               {facilities.map((facility) => (
                 <SelectItem key={facility.id} value={facility.name}>
                   {facility.name}
@@ -65,14 +65,14 @@ const Header = ({
           </Select>
           
           <Select
-            value={state || ""}
-            onValueChange={(value) => onStateChange(value === "" ? null : value)}
+            value={state || "all"}
+            onValueChange={(value) => onStateChange(value === "all" ? null : value)}
           >
             <SelectTrigger className="w-[120px]">
               <SelectValue placeholder="All States" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All States</SelectItem>
+              <SelectItem value="all">All States</SelectItem>
               {states.map((state) => (
                 <SelectItem key={state} value={state}>
                   {state}
@@ -82,14 +82,14 @@ const Header = ({
           </Select>
           
           <Select
-            value={provider || ""}
-            onValueChange={(value) => onProviderChange(value === "" ? null : value)}
+            value={provider || "all"}
+            onValueChange={(value) => onProviderChange(value === "all" ? null : value)}
           >
             <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="All Providers" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Providers</SelectItem>
+              <SelectItem value="all">All Providers</SelectItem>
               {providers.map((provider) => (
                 <SelectItem key={provider.id} value={provider.name}>
                   {provider.name}
