@@ -1,8 +1,11 @@
 
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DateRange, Facility, Provider } from '@/types/dashboard';
 import { facilities, providers, states } from '@/services/mockData';
+import { Info } from 'lucide-react';
 
 interface HeaderProps {
   dateRange: DateRange;
@@ -32,7 +35,14 @@ const Header = ({
           Curana Health: Risk Stratification Dashboard
         </h1>
         
-        <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
+        <div className="flex flex-wrap items-center gap-2 mt-4 md:mt-0">
+          <Link to="/risk-tiers">
+            <Button variant="outline" size="sm" className="flex items-center gap-1">
+              <Info className="h-4 w-4" />
+              <span>Risk Tiers</span>
+            </Button>
+          </Link>
+          
           <Select
             value={dateRange}
             onValueChange={(value) => onDateRangeChange(value as DateRange)}
