@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import RiskTierDefinitions from "./pages/RiskTierDefinitions";
 import CareGapReports from "./pages/CareGapReports";
 import PalliativeEligibility from "./pages/PalliativeEligibility";
+import PatientRiskTable from "./pages/PatientRiskTable";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/risk-tiers" element={<RiskTierDefinitions />} />
           <Route path="/care-gaps" element={<CareGapReports />} />
           <Route path="/palliative-eligibility" element={<PalliativeEligibility />} />
+          <Route path="/patient-risk-table" element={<PatientRiskTable />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

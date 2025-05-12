@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import KeyMetricsCard from '@/components/KeyMetricsCard';
 import RiskTierChart from '@/components/RiskTierChart';
-import PatientTable from '@/components/PatientTable';
+import TierBreakdownWidget from '@/components/TierBreakdownWidget';
 import SidebarPanel from '@/components/SidebarPanel';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DateRange, FilterState, Patient, KeyMetrics, RiskTierBreakdown, RiskTier } from '@/types/dashboard';
 import { fetchFilteredPatients, getKeyMetrics, getRiskTierBreakdown } from '@/services/mockData';
-import { FileText, PieChart } from 'lucide-react';
+import { FileText, PieChart, List } from 'lucide-react';
 
 const Dashboard = () => {
   const [filters, setFilters] = useState<FilterState>({
@@ -117,6 +117,16 @@ const Dashboard = () => {
                     </Button>
                   </Link>
                   
+                  <Link to="/patient-risk-table" className="block">
+                    <Button variant="outline" className="w-full justify-start py-6 text-left">
+                      <List className="mr-3 h-5 w-5" />
+                      <div>
+                        <p className="font-semibold">Patient Risk Table</p>
+                        <p className="text-sm text-gray-500">View detailed patient risk data</p>
+                      </div>
+                    </Button>
+                  </Link>
+                  
                   <Link to="/care-gaps" className="block">
                     <Button variant="outline" className="w-full justify-start py-6 text-left">
                       <FileText className="mr-3 h-5 w-5" />
@@ -141,7 +151,7 @@ const Dashboard = () => {
             </div>
             
             <div>
-              <PatientTable patients={patients} />
+              <TierBreakdownWidget />
             </div>
           </div>
           
